@@ -1,14 +1,15 @@
 # data science
 numpy
 pandas
+colorama
 
 # Uncomment if you use sklearn
 # scikit-learn
 
 # Install the correct TensorFlow version
 # Uncomment if you use TensorFlow
-# tensorflow~=2.13    # For both Intel and Apple silicon
-
+tensorflow~=2.13    # For both Intel and Apple silicon
+mlflow
 # Google Cloud
 google-cloud-storage
 
