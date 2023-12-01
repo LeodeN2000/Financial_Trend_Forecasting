@@ -39,7 +39,7 @@ def drop_rows(df):
     return cleaned_df
 
 
-def data_formating(df, date_column, open_column, high_column, low_column, adj_close_column, volume_column):
+def data_formating(df, columns):
     """
     Preprocess a DataFrame by renaming columns, setting columns to float64,
     dropping unnecessary columns, setting the 'date' column to datetime type,
@@ -47,57 +47,96 @@ def data_formating(df, date_column, open_column, high_column, low_column, adj_cl
 
     Parameters:
     - df (pd.DataFrame): Input DataFrame.
-    - define which columns of df refere to which price data
+    - columns (list): define which columns of df refere to which variable
 
     Returns:
-    - pd.DataFrame: Processed DataFrame.
+    - pd.DataFrame: formated DataFrame.
     """
     # Step 1: Rename columns
-    df = df.rename(columns={
-        date_column: 'date',
-        open_column: 'open',
-        high_column: 'high',
-        low_column: 'low',
-        adj_close_column: 'adj_close',
-        volume_column: 'volume',
+    formated_df = df.rename(columns={
+        columns[0]: 'date',
+        columns[1]: 'open',
+        columns[2]: 'high',
+        columns[3]: 'low',
+        columns[4]: 'adj_close',
+        columns[5]: 'volume'
     })
 
     # Step 2: Set columns to float64
-    df = df.astype({'open': 'float32', 'high': 'float32', 'low': 'float32', 'adj_close': 'float32', 'volume': 'float32'})
+    formated_df = formated_df.astype({'open': 'float32', 'high': 'float32', 'low': 'float32', 'adj_close': 'float32', 'volume': 'float32'})
 
     # Step 3: Drop all other columns
     columns_to_keep = ['date', 'open', 'high', 'low', 'adj_close', 'volume']
-    df = df[columns_to_keep]
+    formated_df = formated_df[columns_to_keep]
 
     # Step 4: Set 'date' column to datetime type
-    df['date'] = pd.to_datetime(df['date'], format='%Y-%m-%d %H:%M:%S')
+    formated_df['date'] = pd.to_datetime(formated_df['date'], format='%Y-%m-%d %H:%M:%S')
 
     # Step 5: Set 'date' column as the index
-    df.set_index('date', inplace=True)
+    formated_df.set_index('date', inplace=True)
 
-    return df
+    return formated_df
 
 
-def sent_df_formating(sent_df, date_column, score_int, total_tweets, share_of_positive, share_of_negative):
+def price_df_formating(df, columns_price):
     """
-    Preprocess a DataFrame by renaming columns, setting columns to float64,
+    Preprocess a DataFrame by renaming columns, setting columns to float32,
     dropping unnecessary columns, setting the 'date' column to datetime type,
     and setting the 'date' column as the index.
 
     Parameters:
     - df (pd.DataFrame): Input DataFrame.
-    - define which columns of df refere to which price data
+    - columns_price (list): define which columns of df refere to which variable
 
     Returns:
-    - pd.DataFrame: Processed DataFrame.
+    - pd.DataFrame: formated DataFrame.
+    """
+    # Step 1: Rename columns
+    formated_df = df.rename(columns={
+        columns_price[0]: 'date',
+        columns_price[1]: 'open',
+        columns_price[2]: 'adj_close'
+    })
+
+    # Step 2: Set columns to float64
+    formated_df = formated_df.astype({'open': 'float32', 'adj_close': 'float32'})
+
+    # Step 3: Drop all other columns
+    columns_to_keep = ['date', 'open', 'adj_close']
+    formated_df = formated_df[columns_to_keep]
+
+    # Step 4: Set 'date' column to datetime type
+    formated_df['date'] = pd.to_datetime(formated_df['date'], format='%Y-%m-%d %H:%M:%S')
+
+    # Step 5: Set 'date' column as the index
+    formated_df.set_index('date', inplace=True)
+
+    # Step 6: Drop Nan rows
+    price_formated_df = formated_df.dropna()
+
+    return price_formated_df
+
+
+def sent_df_formating(sent_df, columns_sent):
+    """
+    Preprocess a DataFrame by renaming columns, setting columns to float32,
+    dropping unnecessary columns, setting the 'date' column to datetime type,
+    and setting the 'date' column as the index.
+
+    Parameters:
+    - sent_df (pd.DataFrame): Input DataFrame.
+    - columns_sent (list): define which columns of df refere to which price data
+
+    Returns:
+    - pd.DataFrame: formated DataFrame.
     """
     # Step 1: Rename columns
     sent_df = sent_df.rename(columns={
-        date_column: 'date',
-        score_int: 'score',
-        total_tweets: 'total',
-        share_of_positive: 'positive',
-        share_of_negative: 'negative'
+        columns_sent[0]: 'date',
+        columns_sent[1]: 'score',
+        columns_sent[2]: 'total',
+        columns_sent[3]: 'positive',
+        columns_sent[4]: 'negative'
     })
 
     # Step 2: Set columns to float64
@@ -110,9 +149,9 @@ def sent_df_formating(sent_df, date_column, score_int, total_tweets, share_of_po
     sent_df.set_index('date', inplace=True)
 
     # Step 4: Drop Nan rows
-    sent_df = sent_df.dropna()
+    sent_formated_df = sent_df.dropna()
 
-    return sent_df
+    return sent_formated_df
 
 
 def labeling_df(labeled_df):
@@ -135,6 +174,20 @@ def merge_df(df, sent_df):
 
     return merged_df
 
+
+def sent_and_features_basic_formating(df, sent_df,  columns_sent, columns):
+
+
+    formated_df = data_formating(df, columns)
+    labeled_df = labeling_df(formated_df)
+    sent_formated_df = sent_df_formating(sent_df, columns_sent)
+    merged_df = merge_df(labeled_df, sent_formated_df)
+
+    return merged_df
+
+
+
+#### FEATURES ENGINEERING
 
 def moving_averages(df, column_name='adj_close', window_sizes=[5, 20]):
     """
