@@ -5,7 +5,7 @@ from keras import Sequential, layers
 from keras.layers import Dense, SimpleRNN, Flatten, LSTM, Bidirectional
 from registry import *
 
-@mlflow_run
+
 def baseline_model(X_train, window_size=15, optimizer_name='adam'):
 
     #############################
