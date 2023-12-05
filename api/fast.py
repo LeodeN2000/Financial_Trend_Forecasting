@@ -38,7 +38,6 @@ def get_predict(model_name='BASELINE'):
 
     X_test = btc_data
 
-
     X_test = features_engineering(X_test)
 
     X_test_processed = preprocessor(X_test).to_numpy()
@@ -47,12 +46,13 @@ def get_predict(model_name='BASELINE'):
 
     X_test_processed = np.expand_dims(X_test_processed, axis=0)
 
-
     prediction = model.predict(X_test_processed)
 
-    return {
-        'prediction': prediction
+    response = {
+        'prediction': float(prediction[0][0])
     }
+
+    return response
 
 if __name__ == "__main__":
 
