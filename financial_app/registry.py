@@ -6,7 +6,7 @@ import pickle
 from colorama import Fore, Style
 from tensorflow import keras
 #from google.cloud import storage
-from params import *
+from financial_app.params import *
 
 import mlflow
 from mlflow.tracking import MlflowClient
@@ -70,12 +70,12 @@ def save_model(model: keras.Model = None) -> None:
 
     #     return None
 
-    # if MODEL_TARGET == "mlflow":
-    #     mlflow.tensorflow.log_model(model=model,
-    #                     artifact_path="model",
-    #                     registered_model_name=MLFLOW_MODEL_NAME
-    #                     )
-    #     print("✅ Model saved to mlflow")
+    if MODEL_TARGET == "mlflow":
+        mlflow.tensorflow.log_model(model=model,
+                        artifact_path="model",
+                        registered_model_name=MLFLOW_MODEL_NAME
+                        )
+        print("✅ Model saved to mlflow")
 
     return None
 

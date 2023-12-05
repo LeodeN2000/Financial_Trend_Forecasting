@@ -561,14 +561,21 @@ def scale_dataframe(df):
 
     index_column = df.index
 
-    date_column = df['label']
-    int_df = df.drop(columns=['label'])
+    # Check if 'label' column exists
+    if 'label' in df.columns:
+        label_column = df['label']
+        df = df.drop(columns=['label'])
+    else:
+        label_column = None
 
-    columns_to_scale = int_df.columns
+    columns_to_scale = df.columns
 
-    scaled_df = pd.DataFrame(scaler.fit_transform(int_df), columns=columns_to_scale)
+    scaled_df = pd.DataFrame(scaler.fit_transform(df), columns=columns_to_scale)
     scaled_df.index = index_column
-    scaled_df['label'] = date_column
+
+    # Re-add the 'label' column if it existed
+    if label_column is not None:
+        scaled_df['label'] = label_column
 
     return scaled_df
 

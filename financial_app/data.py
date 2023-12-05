@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import os
-from utils import data_formating, \
+from financial_app.utils import data_formating, \
                 sent_df_formating, \
                 moving_averages, \
                 bollinger_bands, \
@@ -17,7 +17,11 @@ from utils import data_formating, \
                 stochastic_oscillator, \
                 labeling_df, \
                 merge_df, \
-                price_df_formating
+                price_df_formating, \
+                proc, \
+                momentum, \
+                first_order_lag, \
+                trading_volume
 
 
 
@@ -98,5 +102,9 @@ def features_engineering(df):
     df = psy(df)
     df = williams_percent_r(df)
     df = stochastic_oscillator(df)
+    df = proc(df)
+    df = momentum(df)
+    df = first_order_lag(df)
+    df = trading_volume(df)
 
     return df
