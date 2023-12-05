@@ -29,10 +29,10 @@ def root():
 
 # Endpoint for https://your-domain.com/predict?input_one=154&input_two=199
 @app.get("/predict")
-def get_predict(model_name='BASELINE'):
+def get_predict(model_name='baseline'):
 
-    if model_name=='BASELINE':
-        model = load_model()
+    if model_name=='baseline':
+        model = load_model(model_name)
 
     btc_data = get_btc_data()
 
@@ -54,7 +54,7 @@ def get_predict(model_name='BASELINE'):
 
     return response
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
 
-    print(get_predict("BASELINE"))
+#     print(get_predict("BASELINE"))

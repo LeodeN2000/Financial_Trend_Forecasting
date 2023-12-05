@@ -25,15 +25,18 @@ from financial_app.utils import data_formating, \
 
 
 
-def get_data(columns_sent):
-    data = pd.read_csv("raw_data/cleaned_merged_data-sample-with-sentiment-v02.csv")
-    sentimental_data = data[columns_sent]
+def get_data(include_sent=False, columns_sent = None):
+    data = pd.read_csv("raw_data/pro_btc_60min_price_df_v2.csv")
+    if include_sent:
+        sentimental_data = data[columns_sent]
+        sent_df = sentimental_data.copy()
+        df = data.copy()
+
+        return df, sent_df
 
     df = data.copy()
-    sent_df = sentimental_data.copy()
-    return df, sent_df
 
-
+    return df
 
 def price_basic_formating(df, columns_price):
 
