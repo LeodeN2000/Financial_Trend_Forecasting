@@ -18,7 +18,7 @@ def save_results(params: dict, metrics: dict) -> None:
     "{LOCAL_REGISTRY_PATH}/metrics/{current_timestamp}.pickle"
     - (unit 03 only) if MODEL_TARGET='mlflow', also persist them on MLflow
     """
-    breakpoint()
+
     if MODEL_TARGET == "mlflow":
         if params is not None:
             mlflow.log_params(params)
@@ -49,7 +49,7 @@ def save_model(model_name: str, model: keras.Model = None) -> None:
     - if MODEL_TARGET='gcs', also persist it in your bucket on GCS at "models/{timestamp}.h5" --> unit 02 only
     - if MODEL_TARGET='mlflow', also persist it on MLflow instead of GCS (for unit 0703 only) --> unit 03 only
     """
-    breakpoint()
+
     MLFLOW_MODEL_NAME = f"{model_name}_financial_trend_querbesd"
 
     timestamp = time.strftime("%Y%m%d-%H%M%S")
