@@ -57,4 +57,4 @@ def get_predict(model_name='baseline'):
 # if __name__ == "__main__":
 
 
-#     print(get_predict("BASELINE"))
+#     print(get_predict("baseline"))

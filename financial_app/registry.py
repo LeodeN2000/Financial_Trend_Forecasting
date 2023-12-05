@@ -18,6 +18,7 @@ def save_results(params: dict, metrics: dict) -> None:
     "{LOCAL_REGISTRY_PATH}/metrics/{current_timestamp}.pickle"
     - (unit 03 only) if MODEL_TARGET='mlflow', also persist them on MLflow
     """
+
     if MODEL_TARGET == "mlflow":
         if params is not None:
             mlflow.log_params(params)
@@ -137,7 +138,9 @@ def load_model(model_name: str, stage="Production") -> keras.Model:
 
     #         return None
 
+
     elif MODEL_TARGET == "mlflow":
+
         print(Fore.BLUE + f"\nLoad [{stage}] model from MLflow..." + Style.RESET_ALL)
 
         mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
@@ -198,7 +201,8 @@ def mlflow_run(func):
         - params (dict, optional): Params to add to the run in MLflow. Defaults to None.
         - context (str, optional): Param describing the context of the run. Defaults to "Train".
     """
-    def wrapper(*args, **kwargs):
+    def wrapper(model_name, *args, **kwargs):
+        MLFLOW_EXPERIMENT = f"{model_name}_financial_trend_querbesd_all"
         mlflow.end_run()
         mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
         mlflow.set_experiment(experiment_name=MLFLOW_EXPERIMENT)
