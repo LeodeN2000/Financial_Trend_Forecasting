@@ -6,7 +6,7 @@ import pickle
 from colorama import Fore, Style
 from tensorflow import keras
 #from google.cloud import storage
-from params import *
+from financial_app.params import *
 
 import mlflow
 from mlflow.tracking import MlflowClient
@@ -18,6 +18,7 @@ def save_results(params: dict, metrics: dict) -> None:
     "{LOCAL_REGISTRY_PATH}/metrics/{current_timestamp}.pickle"
     - (unit 03 only) if MODEL_TARGET='mlflow', also persist them on MLflow
     """
+
     if MODEL_TARGET == "mlflow":
         if params is not None:
             mlflow.log_params(params)
@@ -42,12 +43,14 @@ def save_results(params: dict, metrics: dict) -> None:
     print("✅ Results saved locally")
 
 
-def save_model(model: keras.Model = None) -> None:
+def save_model(model_name: str, model: keras.Model = None) -> None:
     """
     Persist trained model locally on the hard drive at f"{LOCAL_REGISTRY_PATH}/models/{timestamp}.h5"
     - if MODEL_TARGET='gcs', also persist it in your bucket on GCS at "models/{timestamp}.h5" --> unit 02 only
     - if MODEL_TARGET='mlflow', also persist it on MLflow instead of GCS (for unit 0703 only) --> unit 03 only
     """
+
+    MLFLOW_MODEL_NAME = f"{model_name}_financial_trend_querbesd"
 
     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
@@ -70,17 +73,17 @@ def save_model(model: keras.Model = None) -> None:
 
     #     return None
 
-    # if MODEL_TARGET == "mlflow":
-    #     mlflow.tensorflow.log_model(model=model,
-    #                     artifact_path="model",
-    #                     registered_model_name=MLFLOW_MODEL_NAME
-    #                     )
-    #     print("✅ Model saved to mlflow")
+    if MODEL_TARGET == "mlflow":
+        mlflow.tensorflow.log_model(model=model,
+                        artifact_path="model",
+                        registered_model_name=MLFLOW_MODEL_NAME
+                        )
+        print("✅ Model saved to mlflow")
 
     return None
 
 
-def load_model(stage="Production") -> keras.Model:
+def load_model(model_name: str, stage="Production") -> keras.Model:
     """
     Return a saved model:
     - locally (latest one in alphabetical order)
@@ -90,6 +93,8 @@ def load_model(stage="Production") -> keras.Model:
     Return None (but do not Raise) if no model is found
 
     """
+
+    MLFLOW_MODEL_NAME = f"{model_name}_financial_trend_querbesd"
 
     if MODEL_TARGET == "local":
         print(Fore.BLUE + f"\nLoad latest model from local registry..." + Style.RESET_ALL)
@@ -133,7 +138,9 @@ def load_model(stage="Production") -> keras.Model:
 
     #         return None
 
+
     elif MODEL_TARGET == "mlflow":
+
         print(Fore.BLUE + f"\nLoad [{stage}] model from MLflow..." + Style.RESET_ALL)
 
         mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
@@ -157,7 +164,7 @@ def load_model(stage="Production") -> keras.Model:
 
 
 
-def mlflow_transition_model(current_stage: str, new_stage: str) -> None:
+def mlflow_transition_model(model_name, current_stage: str, new_stage: str) -> None:
     """
     Transition the latest model from the `current_stage` to the
     `new_stage` and archive the existing model in `new_stage`
@@ -165,6 +172,7 @@ def mlflow_transition_model(current_stage: str, new_stage: str) -> None:
     mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 
     client = MlflowClient()
+    MLFLOW_MODEL_NAME = f"{model_name}_financial_trend_querbesd"
 
     version = client.get_latest_versions(name=MLFLOW_MODEL_NAME, stages=[current_stage])
 
@@ -193,7 +201,8 @@ def mlflow_run(func):
         - params (dict, optional): Params to add to the run in MLflow. Defaults to None.
         - context (str, optional): Param describing the context of the run. Defaults to "Train".
     """
-    def wrapper(*args, **kwargs):
+    def wrapper(model_name, *args, **kwargs):
+        MLFLOW_EXPERIMENT = f"{model_name}_financial_trend_querbesd_all"
         mlflow.end_run()
         mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
         mlflow.set_experiment(experiment_name=MLFLOW_EXPERIMENT)
