@@ -25,7 +25,7 @@ def train_test_split_and_reshape(df, test_size, window_size:int):
     return X_train, y_train, X_test, y_test
 
 @mlflow_run
-def train_model(model, X_train, y_train, validation_split=0.2, batch_size=64 ):
+def train_model(model_name, model, X_train, y_train, validation_split=0.2, batch_size=64 ):
 
     es = EarlyStopping(patience=5, restore_best_weights=True)
 
@@ -50,12 +50,12 @@ def train_model(model, X_train, y_train, validation_split=0.2, batch_size=64 ):
 
     # Save model weight on the hard drive (and optionally on GCS too!)
     #breakpoint()
-    save_model(model=model)
+    save_model(model_name, model=model)
 
     # The latest model should be moved to staging
 
     if MODEL_TARGET == 'mlflow':
-        mlflow_transition_model(current_stage="None", new_stage="Staging")
+        mlflow_transition_model(model_name, current_stage="None", new_stage="Staging")
 
     print("✅ train() done \n")
 

@@ -14,18 +14,19 @@ window_size=15
 
 include_sent = False
 
-columns = ['Datetime', 'Open-TSLA', 'High-TSLA', 'Low-TSLA', 'Adj Close-TSLA', 'Volume-TSLA']
-columns_price = ['Datetime','Open-TSLA', 'Adj Close-TSLA']
+columns = ['date', 'open', 'high', 'low', 'adj_close', 'volume']
+columns_price = ['date','open', 'adj_close']
 columns_sent = ['Datetime', 'score_int', 'total_tweets', 'share_of_positive', 'share_of_negative']
 
-selected_model = 'baseline'
+model_name = 'baseline'
 
 ###### END PARAMETERS
 
 
 ## Get data locally
-df, sent_df = get_data(columns_sent)
-
+if include_sent is True:
+    df, sent_df = get_data(include_sent=False)
+df = get_data(include_sent=False)
 ## Formatting and merging data
 if include_sent is True:
     df = sent_and_features_basic_formating(df, sent_df, columns_sent, columns)
@@ -45,8 +46,8 @@ X_train, y_train, X_test, y_test = train_test_split_and_reshape(preprocessed_df,
 
 
 ## Instantiate the model -- SELECT THE MODEL YOU WANT -- WIP
-if selected_model == 'baseline':
+if model_name == 'baseline':
     estimator = baseline_model(X_train, window_size, optimizer_name='adam')
 
 ## Train the model
-model = train_model(estimator, X_train, y_train, validation_split=0.2, batch_size=64 )
+model = train_model(model_name, estimator, X_train, y_train, validation_split=0.2, batch_size=64 )
