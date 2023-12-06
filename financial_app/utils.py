@@ -609,16 +609,17 @@ def train_test_split(df, test_size=0.2):
     return df_train, df_test
 
 
-def input_matrix_split_X_y(df, window_size=5):
+def split_X_y(df, window_size=10):
     """
-    Reshape a DataFrame into a 3D NumPy arrays (num_observations, window_size, num_features)
+    Reshape a DataFrames into two 3D NumPy arrays
 
     Parameters:
     - df: DataFrame with a list of time series data
-    - sequence_length: the number of time steps to consider for each observation
+    - window_size: the number of time steps to consider for each observation
 
     Returns:
-    - X, y: a 3D NumPy arrays, one for the features and one for the lables
+    - X: (num_observations, window_size, num_features)
+    - y: (num_observations, num_features_to_predict)
     """
     df_np = df.to_numpy()
     X = []
@@ -633,8 +634,15 @@ def input_matrix_split_X_y(df, window_size=5):
         label = df_y[i+(window_size)]
         y.append(label)
 
-    X = np.array(X)
-    y = np.array(y)
-    y = np.expand_dims(y, axis=-1)
+    # Shift the labels to get the label of the following sequence
+    y_df_shifted = np.roll(df_y, 1)
 
-    return X, y
+    # Drop the first element from X_train_shifted and y_train_shifted
+    X_df_shifted = df_X[1:]
+    y_df_shifted = y_df_shifted[1:]
+
+    X_df_shifted = np.array(X)
+    y = np.array(y)
+    y_df_shifted = np.expand_dims(y, axis=-1)
+
+    return X_df_shifted, y_df_shifted

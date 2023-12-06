@@ -17,7 +17,6 @@ from financial_app.utils import data_formating, \
                 stochastic_oscillator, \
                 labeling_df, \
                 merge_df, \
-                price_df_formating, \
                 proc, \
                 momentum, \
                 first_order_lag, \
@@ -38,12 +37,12 @@ def get_data(include_sent=False, columns_sent = None):
 
     return df
 
-def price_basic_formating(df, columns_price):
+# def price_basic_formating(df, columns_price):
 
-    price_formated_df = price_df_formating(df, columns_price)
-    price_labeled_df = labeling_df(price_formated_df)
+#     price_formated_df = price_df_formating(df, columns_price)
+#     price_labeled_df = labeling_df(price_formated_df)
 
-    return price_labeled_df
+#     return price_labeled_df
 
 ## CASE 1 FORMATING PRICE DATASETS ONLY
 def features_basic_formating(df, columns):

@@ -5,12 +5,14 @@ from data import get_data, features_basic_formating, sent_and_features_basic_for
 from preprocessor import preprocessor
 from training import train_test_split_and_reshape, train_model
 from estimators.baseline import baseline_model
+from estimators.lstm import lstm_model_initialization
+from estimators.gru import gru_model_initialization
 from registry import *
 
 ## PARAMETERS
 
 test_size = 0.2
-window_size=15
+window_size=10
 
 include_sent = False
 
@@ -18,7 +20,7 @@ columns = ['date', 'open', 'high', 'low', 'adj_close', 'volume']
 columns_price = ['date','open', 'adj_close']
 columns_sent = ['Datetime', 'score_int', 'total_tweets', 'share_of_positive', 'share_of_negative']
 
-model_name = 'baseline'
+model_name = 'gru'
 
 ###### END PARAMETERS
 
@@ -48,6 +50,11 @@ X_train, y_train, X_test, y_test = train_test_split_and_reshape(preprocessed_df,
 ## Instantiate the model -- SELECT THE MODEL YOU WANT -- WIP
 if model_name == 'baseline':
     estimator = baseline_model(X_train, window_size, optimizer_name='adam')
+elif model_name == 'lstm':
+    estimator = lstm_model_initialization(X_train, window_size)
+elif model_name == 'gru':
+    estimator = gru_model_initialization(X_train, window_size)
+
 
 ## Train the model
 model = train_model(model_name, estimator, X_train, y_train, validation_split=0.2, batch_size=64 )

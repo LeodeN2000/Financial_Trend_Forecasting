@@ -204,7 +204,7 @@ def mlflow_run(func):
     def wrapper(*args, **kwargs):
 
         MLFLOW_EXPERIMENT = f"{args[0]}_financial_trend_querbesd_all"
-        breakpoint()
+
         mlflow.end_run()
         mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
         mlflow.set_experiment(experiment_name=MLFLOW_EXPERIMENT)
