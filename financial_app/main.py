@@ -15,7 +15,7 @@ test_size = 0.2
 window_size=10
 
 time_horizon = '1h'
-model_type = 'baseline'
+model_type = 'lstm'
 asset = 'btc'
 
 include_sent = False
@@ -49,7 +49,7 @@ preprocessed_df = preprocessor(df)
 
 ## Train split step
 X_train, y_train, X_test, y_test = train_test_split_and_reshape(preprocessed_df, test_size, window_size)
-
+breakpoint()
 
 ## Instantiate the model -- SELECT THE MODEL YOU WANT -- WIP
 if model_type == 'baseline':

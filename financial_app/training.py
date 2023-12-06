@@ -55,7 +55,7 @@ def train_model(model_name, model, X_train, y_train, validation_split=0.2, batch
     # The latest model should be moved to staging
 
     if MODEL_TARGET == 'mlflow':
-        mlflow_transition_model(model_name, current_stage="None", new_stage="Staging")
+        mlflow_transition_model(model_name, current_stage="None", new_stage="Production")
 
     print("✅ train() done \n")
 

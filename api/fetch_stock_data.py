@@ -1,14 +1,14 @@
 import yfinance as yf
 import pandas as pd
 
-def get_stock_data(ticker="appl"):
+def get_stock_data(ticker="btc-usd"):
 
     stock = yf.Ticker(ticker)
 
     # get historical market data
-    hist = stock.history(period="1mo")
+    hist = stock.history(period="1mo", interval='60m')
 
-    volumes = hist['Volumes']
+    volumes = hist['Volume']
 
     open_prices = hist['Open']
 
@@ -18,7 +18,7 @@ def get_stock_data(ticker="appl"):
 
     low_prices = hist['Low']
 
-    hist_df = pd.DataFrame(data={'date': hist['Date'],
+    hist_df = pd.DataFrame(data={
                     'volume': volumes,
                     'open': open_prices,
                     'high': high_prices,
@@ -27,3 +27,7 @@ def get_stock_data(ticker="appl"):
 
 
     return hist_df
+
+# if __name__ == "__main__":
+
+#     print(get_stock_data("btc-usd"))

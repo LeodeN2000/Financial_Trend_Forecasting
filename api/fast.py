@@ -30,13 +30,12 @@ def root():
 
 # Endpoint for https://your-domain.com/predict?input_one=154&input_two=199
 @app.get("/predict")
-def get_predict(asset='btc', time_horizon='1h', model_type='baseline'):
+def get_predict(asset='btc-usd', time_horizon='1h', model_type='gru'):
 
-    if asset=='btc':
-        real_time_price = get_btc_data()
-    else:
-        real_time_price = get_stock_data(asset)
+    real_time_price = get_stock_data(asset)
 
+    if asset == 'btc-usd':
+        asset = 'btc'
 
     model_name = f'{asset}_{model_type}_{time_horizon}'
 
@@ -62,4 +61,4 @@ def get_predict(asset='btc', time_horizon='1h', model_type='baseline'):
 
 if __name__ == "__main__":
 
-    print(get_predict("btc", "1h", "baseline"))
+    print(get_predict("btc-usd", "1h", "gru"))
