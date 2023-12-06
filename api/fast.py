@@ -1,6 +1,7 @@
 # TODO: Import your package, replace this by explicit imports of what you need
 
 from api.fetch_btc_data import get_btc_data
+from api.fetch_stock_data import get_stock_data
 from financial_app.preprocessor import *
 from financial_app.utils import *
 from financial_app.data import features_engineering
@@ -29,14 +30,19 @@ def root():
 
 # Endpoint for https://your-domain.com/predict?input_one=154&input_two=199
 @app.get("/predict")
-def get_predict(model_name='baseline'):
+def get_predict(asset='btc', time_horizon='1h', model_type='baseline'):
 
-    if model_name=='baseline':
-        model = load_model(model_name)
+    if asset=='btc':
+        real_time_price = get_btc_data()
+    else:
+        real_time_price = get_stock_data(asset)
 
-    btc_data = get_btc_data()
 
-    X_test = btc_data
+    model_name = f'{asset}_{model_type}_{time_horizon}'
+
+    model = load_model(model_name)
+
+    X_test = real_time_price
 
     X_test = features_engineering(X_test)
 
@@ -54,7 +60,6 @@ def get_predict(model_name='baseline'):
 
     return response
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-
-#     print(get_predict("baseline"))
+    print(get_predict("btc", "1h", "baseline"))
