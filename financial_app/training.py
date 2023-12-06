@@ -11,7 +11,7 @@ from keras import models, layers
 from registry import *
 
 from utils import train_test_split, \
-                  input_matrix_split_X_y
+                  split_X_y
 
 def train_test_split_and_reshape(df, test_size, window_size:int):
 
@@ -19,8 +19,8 @@ def train_test_split_and_reshape(df, test_size, window_size:int):
     split_scaled_clean_merged_df = train_test_split(df, test_size)
 
     ## Get X_train, y_train, X_test, y_test reshaped
-    X_train, y_train = input_matrix_split_X_y(split_scaled_clean_merged_df[0], window_size)
-    X_test, y_test = input_matrix_split_X_y(split_scaled_clean_merged_df[1], window_size)
+    X_train, y_train = split_X_y(split_scaled_clean_merged_df[0], window_size)
+    X_test, y_test = split_X_y(split_scaled_clean_merged_df[1], window_size)
 
     return X_train, y_train, X_test, y_test
 

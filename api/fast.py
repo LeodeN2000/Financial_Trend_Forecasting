@@ -42,7 +42,7 @@ def get_predict(model_name='baseline'):
 
     X_test_processed = preprocessor(X_test).to_numpy()
 
-    X_test_processed = X_test_processed[-15:,]
+    X_test_processed = X_test_processed[-10:,]
 
     X_test_processed = np.expand_dims(X_test_processed, axis=0)
 

@@ -10,7 +10,7 @@ from registry import *
 ## PARAMETERS
 
 test_size = 0.2
-window_size=15
+window_size=10
 
 include_sent = False
 
