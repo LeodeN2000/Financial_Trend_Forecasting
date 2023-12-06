@@ -201,8 +201,10 @@ def mlflow_run(func):
         - params (dict, optional): Params to add to the run in MLflow. Defaults to None.
         - context (str, optional): Param describing the context of the run. Defaults to "Train".
     """
-    def wrapper(model_name, *args, **kwargs):
-        MLFLOW_EXPERIMENT = f"{model_name}_financial_trend_querbesd_all"
+    def wrapper(*args, **kwargs):
+
+        MLFLOW_EXPERIMENT = f"{args[0]}_financial_trend_querbesd_all"
+        breakpoint()
         mlflow.end_run()
         mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
         mlflow.set_experiment(experiment_name=MLFLOW_EXPERIMENT)
