@@ -6,7 +6,7 @@ from keras.layers import Dense, SimpleRNN, Flatten, LSTM, Bidirectional
 from registry import *
 
 
-def baseline_model(X_train, window_size=15, optimizer_name='adam'):
+def baseline_model(X_train, window_size=10, optimizer_name='adam'):
 
     #############################
     #  1 - Model architecture   #

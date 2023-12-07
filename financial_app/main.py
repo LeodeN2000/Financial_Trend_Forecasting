@@ -14,13 +14,17 @@ from registry import *
 test_size = 0.2
 window_size=10
 
+time_horizon = '1h'
+model_type = 'lstm'
+asset = 'btc'
+
 include_sent = False
 
 columns = ['date', 'open', 'high', 'low', 'adj_close', 'volume']
 columns_price = ['date','open', 'adj_close']
 columns_sent = ['Datetime', 'score_int', 'total_tweets', 'share_of_positive', 'share_of_negative']
 
-model_name = 'gru'
+model_name = f'{asset}_{model_type}_{time_horizon}'
 
 ###### END PARAMETERS
 
@@ -45,14 +49,14 @@ preprocessed_df = preprocessor(df)
 
 ## Train split step
 X_train, y_train, X_test, y_test = train_test_split_and_reshape(preprocessed_df, test_size, window_size)
-
+breakpoint()
 
 ## Instantiate the model -- SELECT THE MODEL YOU WANT -- WIP
-if model_name == 'baseline':
+if model_type == 'baseline':
     estimator = baseline_model(X_train, window_size, optimizer_name='adam')
-elif model_name == 'lstm':
+elif model_type == 'lstm':
     estimator = lstm_model_initialization(X_train, window_size)
-elif model_name == 'gru':
+elif model_type == 'gru':
     estimator = gru_model_initialization(X_train, window_size)
 
 
