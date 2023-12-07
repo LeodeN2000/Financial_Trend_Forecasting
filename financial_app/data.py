@@ -25,7 +25,7 @@ from financial_app.utils import data_formating, \
 
 
 def get_data(include_sent=False, columns_sent = None):
-    data = pd.read_csv("raw_data/pro_btc_60min_price_df_v2.csv")
+    data = pd.read_csv("raw_data/pro_btc_5min_price_df_v2.csv")
     if include_sent:
         sentimental_data = data[columns_sent]
         sent_df = sentimental_data.copy()

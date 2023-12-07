@@ -1,12 +1,15 @@
 import yfinance as yf
 import pandas as pd
 
-def get_stock_data(ticker="btc-usd"):
+def get_stock_data(ticker="btc-usd", time_horizon='60m'):
 
     stock = yf.Ticker(ticker)
-
+    if time_horizon == '5m':
+        period="1d"
+    else:
+        period="1mo"
     # get historical market data
-    hist = stock.history(period="1mo", interval='60m')
+    hist = stock.history(period=period, interval=time_horizon)
 
     volumes = hist['Volume']
 
@@ -28,6 +31,6 @@ def get_stock_data(ticker="btc-usd"):
 
     return hist_df
 
-# if __name__ == "__main__":
+if __name__ == "__main__":
 
-#     print(get_stock_data("btc-usd"))
+     print(get_stock_data("btc-usd"))
