@@ -28,11 +28,27 @@ def root():
         'message': "Hi, The API is running!"
     }
 
+
+time_horizon_mapping = {
+    '5mn': '5m',
+    '5m': '5mn',
+    '1h': '60m',
+    '60m': '1h'
+}
+
+
 # Endpoint for https://your-domain.com/predict?input_one=154&input_two=199
 @app.get("/predict")
 def get_predict(asset='btc-usd', time_horizon='1h', model_type='gru'):
 
-    real_time_price = get_stock_data(asset)
+    # Convert the time horizon using the mapping
+    time_horizon = time_horizon_mapping.get(time_horizon, time_horizon)
+
+    real_time_price = get_stock_data(asset, time_horizon)
+
+    # Convert the time horizon back
+    time_horizon = time_horizon_mapping.get(time_horizon, time_horizon)
+
 
     if asset == 'btc-usd':
         asset = 'btc'
@@ -62,7 +78,13 @@ def get_predict(asset='btc-usd', time_horizon='1h', model_type='gru'):
 @app.get("/hist_predict")
 def get_hist_predict(asset='btc-usd', time_horizon='1h', model_type='gru'):
 
-    real_time_price = get_stock_data(asset)
+    # Convert the time horizon using the mapping
+    time_horizon = time_horizon_mapping.get(time_horizon, time_horizon)
+
+    real_time_price = get_stock_data(asset, time_horizon)
+
+    # Convert the time horizon back
+    time_horizon = time_horizon_mapping.get(time_horizon, time_horizon)
 
     if asset == 'btc-usd':
         asset = 'btc'
@@ -115,4 +137,4 @@ def get_hist_predict(asset='btc-usd', time_horizon='1h', model_type='gru'):
 
 if __name__ == "__main__":
 
-     print(get_hist_predict("btc-usd", "1h", "gru"))
+     print(get_hist_predict("btc-usd", "5mn", "gru"))
